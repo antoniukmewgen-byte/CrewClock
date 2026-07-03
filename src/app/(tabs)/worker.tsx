@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function Page() {
-    
+const WorkerScreen = () => {
   return (
     <View>
-        <Text>index</Text>
+      <Text>worker</Text>
     </View>
-    )
+  )
 }
 
+export default WorkerScreen
