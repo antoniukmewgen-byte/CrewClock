@@ -1,10 +1,11 @@
-import { Text, View } from 'react-native'
+import { Text } from 'react-native'
+import { ScreenBackground } from '@/components/ScreenBackground'
 
 const CalendarScreen = () => {
   return (
-    <View>
+    <ScreenBackground>
       <Text>calendar</Text>
-    </View>
+    </ScreenBackground>
   )
 }
 

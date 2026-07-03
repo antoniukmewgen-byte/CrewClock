@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
+import { Colors } from '@/theme/colors'
 
 export default function Welcome() {
   const router = useRouter()
@@ -29,10 +30,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
-    backgroundColor: '#000',
+    backgroundColor: Colors.black,
   },
   buttonText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontWeight: '500',
   },

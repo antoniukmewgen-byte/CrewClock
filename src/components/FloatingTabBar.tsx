@@ -2,6 +2,7 @@ import { View, Pressable, StyleSheet } from 'react-native'
 import { BlurView } from 'expo-blur'
 import { Ionicons } from '@expo/vector-icons'
 import type { BottomTabBarProps } from 'expo-router/js-tabs'
+import { Colors } from '@/theme/colors'
 
 const ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
   home: 'home',
@@ -36,7 +37,7 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
               onPress={onPress}
               style={[styles.item, focused && styles.itemActive]}
             >
-              <Ionicons name={iconName} size={20} color={focused ? '#34d399' : '#e5e7eb'} />
+              <Ionicons name={iconName} size={20} color={focused ? Colors.accent : Colors.iconInactive} />
             </Pressable>
           )
         })}
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingVertical: 8,
     paddingHorizontal: 8,
-    backgroundColor: 'rgba(10, 30, 20, 0.55)',
+    backgroundColor: Colors.tabBarBackground,
     gap: 14,
   },
   item: {
@@ -70,6 +71,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   itemActive: {
-    backgroundColor: 'rgba(52, 211, 153, 0.15)',
+    backgroundColor: Colors.tabBarActiveBackground,
   },
 })

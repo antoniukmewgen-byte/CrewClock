@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { Text } from 'react-native'
+import { ScreenBackground } from '@/components/ScreenBackground'
 
 const ReportScreen = () => {
   return (
-    <View>
+    <ScreenBackground>
       <Text>report</Text>
-    </View>
+    </ScreenBackground>
   )
 }
 
