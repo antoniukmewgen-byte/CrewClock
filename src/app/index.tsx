@@ -8,7 +8,7 @@ export default function Welcome() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CrewClock</Text>
-      <Pressable style={styles.button} onPress={() => router.replace('/home')}>
+      <Pressable style={styles.button} onPress={() => router.replace('/calendar')}>
         <Text style={styles.buttonText}>Почати</Text>
       </Pressable>
     </View>

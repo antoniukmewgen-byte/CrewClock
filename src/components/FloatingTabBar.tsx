@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     backgroundColor: Colors.tabBarBackground,
-    gap: 14,
+    gap: 24,
   },
   item: {
     alignItems: 'center',
