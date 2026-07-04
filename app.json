@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "CrewClock",
-    "slug": "CrewClock",
+    "slug": "evantoniuk",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -11,6 +11,7 @@
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.evheniicodess.crewclock",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -37,6 +38,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "949a50df-6ca1-4a70-8713-fbdf87b7e5fe"
+      }
+    },
+    "owner": "evheniicodess-team"
   }
 }
