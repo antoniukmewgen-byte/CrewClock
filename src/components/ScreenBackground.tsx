@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { ReactNode, useMemo } from 'react'
+import { View, StyleSheet, useWindowDimensions } from 'react-native'
 import { SafeAreaView, Edge } from 'react-native-safe-area-context'
 import { Colors } from '@/theme/colors'
 
@@ -8,11 +8,43 @@ type ScreenBackgroundProps = {
   edges?: Edge[]
 }
 
+// Horizontal/vertical padding applied by this component's container.
+// Exported so screens can compute exact available width without duplicating this value.
+export const SCREEN_PADDING = 20
+
 export function ScreenBackground({ children, edges = ['top'] }: ScreenBackgroundProps) {
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+
+  // Fixed-pixel geometry (derived from the actual window size) instead of
+  // percentages: percentages get recalculated on every layout pass the
+  // SafeAreaView goes through (insets resolving, screen/tab transitions),
+  // which made the circles visibly "jump" right after navigating.
+  const circleStyles = useMemo(() => {
+    const topLeftSize = windowWidth * 0.5
+    const bottomRightSize = windowWidth * 0.75
+
+    return {
+      topLeft: {
+        top: windowHeight * 0.03,
+        left: -windowWidth * 0.18,
+        width: topLeftSize,
+        height: topLeftSize,
+        borderRadius: topLeftSize / 2,
+      },
+      bottomRight: {
+        top: windowHeight * 0.24,
+        right: -windowWidth * 0.15,
+        width: bottomRightSize,
+        height: bottomRightSize,
+        borderRadius: bottomRightSize / 2,
+      },
+    }
+  }, [windowWidth, windowHeight])
+
   return (
     <SafeAreaView style={styles.container} edges={edges}>
-      <View style={styles.circleTopLeft} />
-      <View style={styles.circleBottomRight} />
+      <View style={[styles.circle, circleStyles.topLeft]} />
+      <View style={[styles.circle, circleStyles.bottomRight]} />
       <View style={styles.content}>{children}</View>
     </SafeAreaView>
   )
@@ -21,26 +53,12 @@ export function ScreenBackground({ children, edges = ['top'] }: ScreenBackground
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: SCREEN_PADDING,
     backgroundColor: Colors.background,
     overflow: 'hidden',
   },
-  circleTopLeft: {
+  circle: {
     position: 'absolute',
-    top: '3%',
-    left: '-18%',
-    width: '50%',
-    aspectRatio: 1,
-    borderRadius: 9999,
-    backgroundColor: Colors.backgroundAlt,
-  },
-  circleBottomRight: {
-    position: 'absolute',
-    top: '24%',
-    right: '-15%',
-    width: '75%',
-    aspectRatio: 1,
-    borderRadius: 9999,
     backgroundColor: Colors.backgroundAlt,
   },
   content: {
