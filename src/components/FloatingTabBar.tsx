@@ -1,7 +1,6 @@
 import { View, Pressable, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BlurView } from 'expo-blur'
-import { Shadow } from 'react-native-shadow-2'
 import { Ionicons } from '@expo/vector-icons'
 import type { BottomTabBarProps } from 'expo-router/js-tabs'
 import { SCREEN_PADDING } from '@/components/ScreenBackground'
@@ -21,14 +20,6 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
       style={[styles.wrapper, { bottom: insets.bottom + 4 }]}
       pointerEvents="box-none"
     >
-      <Shadow
-        distance={40}
-        offset={[0, 24]}
-        startColor="rgba(0,0,0,0.22)"
-        endColor="rgba(0,0,0,0)"
-        style={styles.shadow}
-        stretch
-      >
         <BlurView intensity={40} tint="dark" style={styles.bar}>
           {state.routes.map((route, index) => {
             const focused = state.index === index
@@ -64,7 +55,6 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
             )
           })}
         </BlurView>
-      </Shadow>
     </View>
   )
 }
@@ -75,9 +65,6 @@ const styles = StyleSheet.create({
     left: SCREEN_PADDING,
     right: SCREEN_PADDING,
     alignItems: 'center',
-  },
-  shadow: {
-    borderRadius: 999,
   },
   bar: {
     flexDirection: 'row',
