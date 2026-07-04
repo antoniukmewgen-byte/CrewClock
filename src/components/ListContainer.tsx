@@ -1,11 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/theme/colors'
+import type { AttendanceStatus } from '@/components/AttendanceSheet'
 
 type ListContainerProps = {
     name: string
     role: string
-    active?: boolean
+    status?: AttendanceStatus
+    hours?: number
+    onPress?: () => void
 }
 
 function getInitials(name: string) {
@@ -17,25 +20,42 @@ function getInitials(name: string) {
         .join('')
 }
 
-export function ListContainer({ name, role, active = true }: ListContainerProps) {
+const STATUS_META: Record<AttendanceStatus, { icon: keyof typeof Ionicons.glyphMap; color: string; bg: string; label: string }> = {
+    worked: { icon: 'checkmark', color: Colors.accent, bg: Colors.tabBarActiveBackground, label: '' },
+    absent: { icon: 'close', color: Colors.iconInactive, bg: 'rgba(255,255,255,0.06)', label: 'Не з’явився' },
+    sick: { icon: 'medkit', color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', label: 'Лікарняний' },
+    vacation: { icon: 'airplane', color: '#38bdf8', bg: 'rgba(56,189,248,0.15)', label: 'Відпустка' },
+}
+
+export function ListContainer({ name, role, status = 'worked', hours, onPress }: ListContainerProps) {
+    const meta = STATUS_META[status]
+    const isWorked = status === 'worked'
+    const subtitle = isWorked
+        ? (hours != null ? `${role} · ${hours} год` : role)
+        : `${role} · ${meta.label}`
+
     return (
         <View style={styles.container}>
-            <View style={[styles.avatar, active ? styles.avatarActive : styles.avatarInactive]}>
-                <Text style={[styles.avatarText, active ? styles.avatarTextActive : styles.avatarTextInactive]}>
+            <View style={[styles.avatar, isWorked ? styles.avatarActive : styles.avatarInactive]}>
+                <Text style={[styles.avatarText, isWorked ? styles.avatarTextActive : styles.avatarTextInactive]}>
                     {getInitials(name)}
                 </Text>
             </View>
             <View style={styles.content}>
                 <Text style={styles.textName} numberOfLines={1}>{name}</Text>
-                <Text style={styles.textRole} numberOfLines={1}>{role}</Text>
+                <Text style={styles.textRole} numberOfLines={1}>{subtitle}</Text>
             </View>
-            <View style={[styles.statusBadge, active ? styles.statusBadgeActive : styles.statusBadgeInactive]}>
-                <Ionicons
-                    name={active ? 'checkmark' : 'close'}
-                    size={16}
-                    color={active ? Colors.accent : Colors.iconInactive}
-                />
-            </View>
+            <Pressable
+                onPress={onPress}
+                hitSlop={8}
+                style={({ pressed }) => [
+                    styles.statusBadge,
+                    { backgroundColor: meta.bg },
+                    pressed && styles.statusBadgePressed,
+                ]}
+            >
+                <Ionicons name={meta.icon} size={16} color={meta.color} />
+            </Pressable>
         </View>
     )
 }
@@ -95,10 +115,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    statusBadgeActive: {
-        backgroundColor: Colors.tabBarActiveBackground,
-    },
-    statusBadgeInactive: {
-        backgroundColor: 'rgba(255,255,255,0.06)',
+    statusBadgePressed: {
+        opacity: 0.7,
     },
 })
