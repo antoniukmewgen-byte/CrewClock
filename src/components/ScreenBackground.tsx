@@ -8,17 +8,11 @@ type ScreenBackgroundProps = {
   edges?: Edge[]
 }
 
-// Horizontal/vertical padding applied by this component's container.
-// Exported so screens can compute exact available width without duplicating this value.
 export const SCREEN_PADDING = 20
 
 export function ScreenBackground({ children, edges = ['top'] }: ScreenBackgroundProps) {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
 
-  // Fixed-pixel geometry (derived from the actual window size) instead of
-  // percentages: percentages get recalculated on every layout pass the
-  // SafeAreaView goes through (insets resolving, screen/tab transitions),
-  // which made the circles visibly "jump" right after navigating.
   const circleStyles = useMemo(() => {
     const topLeftSize = windowWidth * 0.5
     const bottomRightSize = windowWidth * 0.75
@@ -53,7 +47,8 @@ export function ScreenBackground({ children, edges = ['top'] }: ScreenBackground
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: SCREEN_PADDING,
+    paddingHorizontal: SCREEN_PADDING,
+    paddingTop: SCREEN_PADDING,
     backgroundColor: Colors.background,
     overflow: 'hidden',
   },
