@@ -34,27 +34,25 @@ const CalendarScreen = () => {
 
   return (
     <ScreenBackground>
-      <View style={{ flex: 1, gap: 16 }}>
+      <View style={{ flex: 1, gap: 20 }}>
         <View style={{ gap: 4 }}>
-          <Text style={styles.dateText}>Липень 4, субота</Text>
+          <Text style={styles.dateText}>Субота, 4 липня</Text>
           <Text style={styles.greetingText}>Хорошого робочого дня, Михайло</Text>
         </View>
-        <View style={{ gap: 4 }}>
+        <View style={{ gap: 2 }}>
           <View style={{
-            paddingVertical: 12, paddingHorizontal: 12, borderRadius: 24, borderBottomLeftRadius: 0,
+            paddingVertical: 12, paddingHorizontal: 24, borderRadius: 24, borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0, backgroundColor: Colors.accent, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
           }}>
-            <Text>
+            <Pressable>
+              <Ionicons name="chevron-back" size={20} color={Colors.white} />
+            </Pressable>
+            <Text style={styles.greetingText}>
               Липень 2026
             </Text>
-            <View style={{ flexDirection: 'row', gap: 32 }}>
-              <Pressable>
-                <Ionicons name="chevron-back" size={20} color={Colors.white} />
-              </Pressable>
-              <Pressable>
-                <Ionicons name="chevron-forward" size={20} color={Colors.white} />
-              </Pressable>
-            </View>
+            <Pressable>
+              <Ionicons name="chevron-forward" size={20} color={Colors.white} />
+            </Pressable>
           </View>
           <View style={styles.box}>
             {calendarWidth > 0 && (
