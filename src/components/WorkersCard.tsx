@@ -14,15 +14,8 @@ type WorkersCardProps = {
     workers: Worker[]
 }
 
-function initialAttendance(workers: Worker[]): Record<string, Attendance> {
-    return workers.reduce<Record<string, Attendance>>((acc, worker) => {
-        acc[worker.name] = worker.active === false ? { status: 'absent' } : { status: 'worked', hours: 8 }
-        return acc
-    }, {})
-}
-
 export function WorkersCard({ workers }: WorkersCardProps) {
-    const [attendance, setAttendance] = useState<Record<string, Attendance>>(() => initialAttendance(workers))
+    const [attendance, setAttendance] = useState<Record<string, Attendance>>({})
     const [selectedWorker, setSelectedWorker] = useState<string | null>(null)
 
     const activeCount = Object.values(attendance).filter((entry) => entry.status === 'worked').length
@@ -38,7 +31,7 @@ export function WorkersCard({ workers }: WorkersCardProps) {
         <BlurView intensity={40} tint="dark" style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.textLabel}>ПРАЦІВНИКІВ</Text>
-                <Text style={styles.textValue}>{activeCount} активних</Text>
+                <Text style={styles.textValue}>{activeCount} з {workers.length} активних</Text>
             </View>
             <View style={styles.divider} />
             <ScrollView

@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/theme/colors'
 import type { AttendanceStatus } from '@/components/AttendanceSheet'
 
@@ -20,22 +19,25 @@ function getInitials(name: string) {
         .join('')
 }
 
-const STATUS_META: Record<AttendanceStatus, { icon: keyof typeof Ionicons.glyphMap; color: string; bg: string; label: string }> = {
-    worked: { icon: 'checkmark', color: Colors.accent, bg: Colors.tabBarActiveBackground, label: '' },
-    absent: { icon: 'close', color: Colors.iconInactive, bg: 'rgba(255,255,255,0.06)', label: 'Не з’явився' },
-    sick: { icon: 'medkit', color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', label: 'Лікарняний' },
-    vacation: { icon: 'airplane', color: '#38bdf8', bg: 'rgba(56,189,248,0.15)', label: 'Відпустка' },
+const STATUS_META: Record<AttendanceStatus, { color: string; bg: string; label: string }> = {
+    worked: { color: Colors.accent, bg: Colors.tabBarActiveBackground, label: '' },
+    absent: { color: Colors.weekend, bg: 'rgba(248,113,113,0.15)', label: 'Не з’явився' },
+    sick: { color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', label: 'Лікарняний' },
+    vacation: { color: '#38bdf8', bg: 'rgba(56,189,248,0.15)', label: 'Відпустка' },
 }
 
-export function ListContainer({ name, role, status = 'worked', hours, onPress }: ListContainerProps) {
-    const meta = STATUS_META[status]
+export function ListContainer({ name, status, hours, onPress }: ListContainerProps) {
+    const meta = status ? STATUS_META[status] : null
     const isWorked = status === 'worked'
-    const subtitle = isWorked
-        ? (hours != null ? `${role} · ${hours} год` : role)
-        : `${role} · ${meta.label}`
+    const valueLabel = status === 'worked'
+        ? (hours != null ? `${hours} год` : 'Вказати')
+        : meta?.label
 
     return (
-        <View style={styles.container}>
+        <Pressable
+            onPress={onPress}
+            style={({ pressed }) => [styles.container, pressed && styles.containerPressed]}
+        >
             <View style={[styles.avatar, isWorked ? styles.avatarActive : styles.avatarInactive]}>
                 <Text style={[styles.avatarText, isWorked ? styles.avatarTextActive : styles.avatarTextInactive]}>
                     {getInitials(name)}
@@ -43,20 +45,15 @@ export function ListContainer({ name, role, status = 'worked', hours, onPress }:
             </View>
             <View style={styles.content}>
                 <Text style={styles.textName} numberOfLines={1}>{name}</Text>
-                <Text style={styles.textRole} numberOfLines={1}>{subtitle}</Text>
             </View>
-            <Pressable
-                onPress={onPress}
-                hitSlop={8}
-                style={({ pressed }) => [
-                    styles.statusBadge,
-                    { backgroundColor: meta.bg },
-                    pressed && styles.statusBadgePressed,
-                ]}
-            >
-                <Ionicons name={meta.icon} size={16} color={meta.color} />
-            </Pressable>
-        </View>
+            {meta && valueLabel ? (
+                <View style={[styles.valueBox, { backgroundColor: meta.bg }]}>
+                    <Text style={[styles.valueText, { color: meta.color }]} numberOfLines={1}>
+                        {valueLabel}
+                    </Text>
+                </View>
+            ) : null}
+        </Pressable>
     )
 }
 
@@ -71,6 +68,9 @@ const styles = StyleSheet.create({
         borderColor: '#33443A',
         paddingHorizontal: 12,
         paddingVertical: 12,
+    },
+    containerPressed: {
+        opacity: 0.8,
     },
     avatar: {
         width: 44,
@@ -104,18 +104,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
-    textRole: {
-        color: Colors.iconInactive,
-        fontSize: 13,
+    valueBox: {
+        maxWidth: 120,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
     },
-    statusBadge: {
-        width: 32,
-        height: 32,
-        borderRadius: 999,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    statusBadgePressed: {
-        opacity: 0.7,
+    valueText: {
+        fontSize: 14,
+        fontWeight: '700',
     },
 })
