@@ -8,7 +8,7 @@ type ScreenBackgroundProps = {
   edges?: Edge[]
 }
 
-export const SCREEN_PADDING = 20
+export const SCREEN_PADDING = 16
 
 export function ScreenBackground({ children, edges = ['top'] }: ScreenBackgroundProps) {
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()

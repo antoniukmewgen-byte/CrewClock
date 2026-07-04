@@ -1,39 +1,130 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useMemo, useRef, useState } from 'react'
+import {
+    FlatList,
+    type LayoutChangeEvent,
+    type NativeScrollEvent,
+    type NativeSyntheticEvent,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/theme/colors'
 import { BlurView } from 'expo-blur'
+import { addDays, addWeeks, format, isToday, startOfWeek } from 'date-fns'
+import { uk } from 'date-fns/locale'
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+
+const WEEKDAY_LABELS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд']
+const WEEK_RANGE = 104
+
+function capitalize(value: string) {
+    return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
+function IconButton({ name, onPress }: { name: keyof typeof Ionicons.glyphMap; onPress: () => void }) {
+    const scale = useSharedValue(1)
+    const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }))
+
+    return (
+        <Pressable
+            onPress={onPress}
+            onPressIn={() => { scale.value = withTiming(0.88, { duration: 100 }) }}
+            onPressOut={() => { scale.value = withTiming(1, { duration: 150 }) }}
+            hitSlop={8}
+        >
+            <Animated.View style={[styles.iconButton, animatedStyle]}>
+                <Ionicons name={name} size={20} color={Colors.iconInactive} />
+            </Animated.View>
+        </Pressable>
+    )
+}
 
 export function CalendarContainer() {
+    const anchorWeekStart = useMemo(() => startOfWeek(new Date(), { weekStartsOn: 1 }), [])
+    const weekOffsets = useMemo(
+        () => Array.from({ length: WEEK_RANGE * 2 + 1 }, (_, i) => i - WEEK_RANGE),
+        [],
+    )
+
+    const flatListRef = useRef<FlatList<number>>(null)
+    const [pageWidth, setPageWidth] = useState<number | null>(null)
+    const [currentIndex, setCurrentIndex] = useState(WEEK_RANGE)
+
+    const currentWeekStart = addWeeks(anchorWeekStart, weekOffsets[currentIndex])
+    const monthYearLabel = capitalize(format(addDays(currentWeekStart, 3), 'LLLL yyyy', { locale: uk }))
+
+    const handleContainerLayout = (event: LayoutChangeEvent) => {
+        setPageWidth(event.nativeEvent.layout.width)
+    }
+
+    const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        if (!pageWidth) return
+        const index = Math.round(event.nativeEvent.contentOffset.x / pageWidth)
+        setCurrentIndex(index)
+    }
+
+    const navigateWeek = (direction: 1 | -1) => {
+        const nextIndex = currentIndex + direction
+        if (nextIndex < 0 || nextIndex >= weekOffsets.length) return
+        flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true })
+        setCurrentIndex(nextIndex)
+    }
+
+    const renderWeekPage = ({ item: offset }: { item: number }) => {
+        const weekStart = addWeeks(anchorWeekStart, offset)
+        const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
+
+        return (
+            <View style={[styles.daysContainer, { width: pageWidth ?? undefined }]}>
+                {days.map((day) => {
+                    const today = isToday(day)
+                    return (
+                        <View key={day.toISOString()} style={[styles.dayBadge, today && styles.dayBadgeToday]}>
+                            <Text style={[styles.dayText, today && styles.dayTextToday]}>
+                                {format(day, 'd')}
+                            </Text>
+                        </View>
+                    )
+                })}
+            </View>
+        )
+    }
+
     return (
         <BlurView intensity={40} tint="dark" style={styles.container}>
             <View style={styles.headerContainer}>
-                <Pressable onPress={() => { }} style={styles.iconButton} hitSlop={8}>
-                    <Ionicons name="chevron-back" size={20} color={Colors.iconInactive} />
-                </Pressable>
-                <Text style={styles.monthText}>Липень 2026</Text>
-                <Pressable onPress={() => { }} style={styles.iconButton} hitSlop={8}>
-                    <Ionicons name="chevron-forward" size={20} color={Colors.iconInactive} />
-                </Pressable>
+                <IconButton name="chevron-back" onPress={() => navigateWeek(-1)} />
+                <Animated.Text key={monthYearLabel} entering={FadeIn.duration(150)} exiting={FadeOut.duration(100)} style={styles.monthText}>
+                    {monthYearLabel}
+                </Animated.Text>
+                <IconButton name="chevron-forward" onPress={() => navigateWeek(1)} />
             </View>
             <View style={styles.divider} />
             <View style={styles.bodyContainer}>
                 <View style={styles.daysContainer}>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Пн</Text>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Вт</Text>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Ср</Text>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Чт</Text>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Пт</Text>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Сб</Text>
-                    <Text style={{ color: Colors.white, fontSize: 14 }}>Нд</Text>
+                    {WEEKDAY_LABELS.map((label) => (
+                        <Text key={label} style={styles.weekdayText}>{label}</Text>
+                    ))}
                 </View>
-                <View style={styles.daysContainer}>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>1</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>2</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>3</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>4</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>5</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>6</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16, fontWeight: 'bold' }}>7</Text>
+                <View style={styles.pageWrapper} onLayout={handleContainerLayout}>
+                    {pageWidth != null && (
+                        <FlatList
+                            ref={flatListRef}
+                            style={{ width: pageWidth }}
+                            data={weekOffsets}
+                            keyExtractor={(offset) => String(offset)}
+                            renderItem={renderWeekPage}
+                            horizontal
+                            pagingEnabled
+                            scrollEnabled={false}
+                            showsHorizontalScrollIndicator={false}
+                            initialScrollIndex={WEEK_RANGE}
+                            getItemLayout={(_, index) => ({ length: pageWidth, offset: pageWidth * index, index })}
+                            onMomentumScrollEnd={handleMomentumScrollEnd}
+                        />
+                    )}
                 </View>
             </View>
         </BlurView>
@@ -78,9 +169,36 @@ const styles = StyleSheet.create({
     bodyContainer: {
         gap: 16,
     },
+    pageWrapper: {
+        height: 28,
+    },
     daysContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-    }
+    },
+    weekdayText: {
+        color: Colors.white,
+        fontSize: 14,
+        width: 28,
+        textAlign: 'center',
+    },
+    dayBadge: {
+        width: 28,
+        height: 28,
+        borderRadius: 999,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dayBadgeToday: {
+        backgroundColor: Colors.accent,
+    },
+    dayText: {
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    dayTextToday: {
+        color: Colors.background,
+    },
 })
