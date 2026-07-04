@@ -14,7 +14,7 @@ const ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
 
 const ITEM_SIZE = 44
 const BAR_VERTICAL_PADDING = 8
-const BAR_BOTTOM_OFFSET = 4
+const BAR_BOTTOM_OFFSET = 8
 
 export const TAB_BAR_HEIGHT = ITEM_SIZE + BAR_VERTICAL_PADDING * 2
 export const TAB_BAR_CLEARANCE = TAB_BAR_HEIGHT + BAR_BOTTOM_OFFSET

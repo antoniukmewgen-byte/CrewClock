@@ -38,10 +38,8 @@ export function WorkersCard({ workers }: WorkersCardProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 12,
         paddingHorizontal: 16,
         paddingTop: 12,
-        paddingBottom: 4,
         borderRadius: 24,
         overflow: 'hidden',
         borderWidth: 1,
@@ -50,6 +48,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        paddingBottom: 12,
     },
     textLabel: {
         color: '#9BBFAB',
@@ -69,6 +68,6 @@ const styles = StyleSheet.create({
     },
     listContent: {
         gap: 10,
-        paddingBottom: 12,
+        paddingVertical: 12,
     },
 })
