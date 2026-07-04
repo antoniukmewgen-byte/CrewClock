@@ -12,12 +12,19 @@ const ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
   report: 'bar-chart',
 }
 
+const ITEM_SIZE = 44
+const BAR_VERTICAL_PADDING = 8
+const BAR_BOTTOM_OFFSET = 4
+
+export const TAB_BAR_HEIGHT = ITEM_SIZE + BAR_VERTICAL_PADDING * 2
+export const TAB_BAR_CLEARANCE = TAB_BAR_HEIGHT + BAR_BOTTOM_OFFSET
+
 export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets()
 
   return (
     <View
-      style={[styles.wrapper, { bottom: insets.bottom + 4 }]}
+      style={[styles.wrapper, { bottom: insets.bottom + BAR_BOTTOM_OFFSET }]}
       pointerEvents="box-none"
     >
         <BlurView intensity={40} tint="dark" style={styles.bar}>
@@ -81,8 +88,8 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 44,
-    height: 44,
+    height: ITEM_SIZE,
+    flex: 1,
     borderRadius: 999,
   },
   itemActive: {

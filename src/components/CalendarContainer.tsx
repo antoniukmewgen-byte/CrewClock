@@ -156,9 +156,9 @@ export function CalendarContainer() {
 
 const styles = StyleSheet.create({
     container: {
-        gap: 12,
+        gap: 16,
         paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingVertical: 16,
         borderRadius: 24,
         overflow: 'hidden',
         borderWidth: 1,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     },
     weekdayText: {
         color: Colors.iconInactive,
-        fontSize: 13,
+        fontSize: 14,
         width: 36,
         textAlign: 'center',
     },
