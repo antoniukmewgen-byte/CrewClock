@@ -1,9 +1,18 @@
 import { useState } from 'react'
 import { View, StyleSheet, useWindowDimensions, Text, Pressable } from 'react-native'
-import { CalendarProvider, ExpandableCalendar, WeekCalendar } from 'react-native-calendars'
+import { CalendarProvider, ExpandableCalendar, WeekCalendar, LocaleConfig } from 'react-native-calendars'
 import { Ionicons } from '@expo/vector-icons'
 import { ScreenBackground, SCREEN_PADDING } from '@/components/ScreenBackground'
 import { Colors } from '@/theme/colors'
+
+LocaleConfig.locales.uk = {
+  monthNames: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+  monthNamesShort: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
+  dayNames: ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П’ятниця', 'Субота'],
+  dayNamesShort: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+  today: 'Сьогодні',
+}
+LocaleConfig.defaultLocale = 'uk'
 
 const today = new Date().toLocaleDateString('en-CA')
 
