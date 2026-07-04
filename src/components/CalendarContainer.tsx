@@ -79,9 +79,10 @@ export function CalendarContainer() {
 
         return (
             <View style={[styles.daysContainer, { width: pageWidth ?? undefined }]}>
-                {days.map((day) => {
+                {days.map((day, index) => {
                     const today = isToday(day)
                     const selected = isSameDay(day, selectedDate)
+                    const isWeekend = index >= 5
                     return (
                         <Pressable
                             key={day.toISOString()}
@@ -94,7 +95,11 @@ export function CalendarContainer() {
                                 pressed && styles.dayBadgePressed,
                             ]}
                         >
-                            <Text style={[styles.dayText, selected && styles.dayTextSelected]}>
+                            <Text style={[
+                                styles.dayText,
+                                isWeekend && !selected && styles.dayTextWeekend,
+                                selected && styles.dayTextSelected,
+                            ]}>
                                 {format(day, 'd')}
                             </Text>
                         </Pressable>
@@ -116,11 +121,16 @@ export function CalendarContainer() {
             <View style={styles.divider} />
             <View style={styles.bodyContainer}>
                 <View style={styles.daysContainer}>
-                    {WEEKDAY_LABELS.map((label) => (
-                        <Text key={label} style={styles.weekdayText}>{label}</Text>
-                    ))}
+                    {WEEKDAY_LABELS.map((label, index) => {
+                        const isWeekend = index >= 5
+                        return (
+                            <Text key={label} style={[styles.weekdayText, isWeekend && styles.weekdayTextWeekend]}>
+                                {label}
+                            </Text>
+                        )
+                    })}
                 </View>
-                <View style={styles.pageWrapper} onLayout={handleContainerLayout}>
+                <View onLayout={handleContainerLayout}>
                     {pageWidth != null && (
                         <FlatList
                             ref={flatListRef}
@@ -147,7 +157,7 @@ export function CalendarContainer() {
 const styles = StyleSheet.create({
     container: {
         gap: 12,
-        paddingHorizontal: 24,
+        paddingHorizontal: 16,
         paddingVertical: 12,
         borderRadius: 24,
         overflow: 'hidden',
@@ -176,28 +186,30 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: 'rgba(255,255,255,0.12)',
     },
     bodyContainer: {
-        gap: 16,
+        gap: 8,
     },
-    pageWrapper: {
-        height: 28,
-    },
+
     daysContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
     },
     weekdayText: {
-        color: Colors.white,
-        fontSize: 14,
-        width: 28,
+        color: Colors.iconInactive,
+        fontSize: 13,
+        width: 36,
         textAlign: 'center',
     },
+    weekdayTextWeekend: {
+        color: Colors.weekend,
+        fontWeight: '600',
+    },
     dayBadge: {
-        width: 28,
-        height: 28,
+        width: 36,
+        height: 36,
         borderRadius: 999,
         alignItems: 'center',
         justifyContent: 'center',
@@ -221,5 +233,8 @@ const styles = StyleSheet.create({
     },
     dayTextSelected: {
         color: Colors.background,
+    },
+    dayTextWeekend: {
+        color: Colors.weekend,
     },
 })
