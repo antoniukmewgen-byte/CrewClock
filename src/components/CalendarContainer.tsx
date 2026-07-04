@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/theme/colors'
 import { BlurView } from 'expo-blur'
-import { addDays, addWeeks, format, isToday, startOfWeek } from 'date-fns'
+import { addDays, addWeeks, format, isSameDay, isToday, startOfWeek } from 'date-fns'
 import { uk } from 'date-fns/locale'
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
@@ -51,6 +51,7 @@ export function CalendarContainer() {
     const flatListRef = useRef<FlatList<number>>(null)
     const [pageWidth, setPageWidth] = useState<number | null>(null)
     const [currentIndex, setCurrentIndex] = useState(WEEK_RANGE)
+    const [selectedDate, setSelectedDate] = useState(() => new Date())
 
     const currentWeekStart = addWeeks(anchorWeekStart, weekOffsets[currentIndex])
     const monthYearLabel = capitalize(format(addDays(currentWeekStart, 3), 'LLLL yyyy', { locale: uk }))
@@ -80,12 +81,23 @@ export function CalendarContainer() {
             <View style={[styles.daysContainer, { width: pageWidth ?? undefined }]}>
                 {days.map((day) => {
                     const today = isToday(day)
+                    const selected = isSameDay(day, selectedDate)
                     return (
-                        <View key={day.toISOString()} style={[styles.dayBadge, today && styles.dayBadgeToday]}>
-                            <Text style={[styles.dayText, today && styles.dayTextToday]}>
+                        <Pressable
+                            key={day.toISOString()}
+                            onPress={() => setSelectedDate(day)}
+                            hitSlop={4}
+                            style={({ pressed }) => [
+                                styles.dayBadge,
+                                today && !selected && styles.dayBadgeToday,
+                                selected && styles.dayBadgeSelected,
+                                pressed && styles.dayBadgePressed,
+                            ]}
+                        >
+                            <Text style={[styles.dayText, selected && styles.dayTextSelected]}>
                                 {format(day, 'd')}
                             </Text>
-                        </View>
+                        </Pressable>
                     )
                 })}
             </View>
@@ -189,16 +201,25 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         alignItems: 'center',
         justifyContent: 'center',
+        borderWidth: 1.5,
+        borderColor: 'transparent',
     },
     dayBadgeToday: {
+        borderColor: Colors.accent,
+    },
+    dayBadgeSelected: {
         backgroundColor: Colors.accent,
+        borderColor: Colors.accent,
+    },
+    dayBadgePressed: {
+        opacity: 0.7,
     },
     dayText: {
         color: Colors.white,
         fontSize: 16,
         fontWeight: 'bold',
     },
-    dayTextToday: {
+    dayTextSelected: {
         color: Colors.background,
     },
 })
