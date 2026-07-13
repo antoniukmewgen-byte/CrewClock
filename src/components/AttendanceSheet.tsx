@@ -99,50 +99,54 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
                     </Pressable>
                 </View>
 
-                {mode === 'worked' ? (
-                    <View style={styles.hoursRow}>
-                        <Pressable style={styles.stepButton} onPress={() => adjustHours(-1)} hitSlop={8}>
-                            <Ionicons name="remove" size={20} color={Colors.white} />
-                        </Pressable>
-                        <View style={styles.hoursValue}>
-                            <TextInput
-                                style={styles.hoursInput}
-                                keyboardType="number-pad"
-                                value={String(hours)}
-                                onChangeText={handleHoursChange}
-                                selectTextOnFocus
-                                underlineColorAndroid="transparent"
-                                maxLength={2}
-                            />
-                            <Text style={styles.hoursLabel}>год</Text>
-                        </View>
-                        <Pressable style={styles.stepButton} onPress={() => adjustHours(1)} hitSlop={8}>
-                            <Ionicons name="add" size={20} color={Colors.white} />
-                        </Pressable>
-                    </View>
-                ) : (
-                    <View style={styles.optionsList}>
-                        {ABSENCE_OPTIONS.map((option) => {
-                            const selected = absenceStatus === option.status
-                            return (
-                                <Pressable
-                                    key={option.status}
-                                    style={[styles.optionRow, selected && styles.optionRowSelected]}
-                                    onPress={() => setAbsenceStatus(option.status)}
-                                >
-                                    <Ionicons
-                                        name={option.icon}
-                                        size={18}
-                                        color={selected ? Colors.accent : Colors.iconInactive}
-                                    />
-                                    <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>
-                                        {option.label}
-                                    </Text>
+                <View style={styles.contentArea}>
+                    {mode === 'worked' ? (
+                        <View style={styles.hoursFrame}>
+                            <View style={styles.hoursRow}>
+                                <Pressable style={styles.stepButton} onPress={() => adjustHours(-1)} hitSlop={8}>
+                                    <Ionicons name="remove" size={20} color={Colors.white} />
                                 </Pressable>
-                            )
-                        })}
-                    </View>
-                )}
+                                <View style={styles.hoursValue}>
+                                    <TextInput
+                                        style={styles.hoursInput}
+                                        keyboardType="number-pad"
+                                        value={String(hours)}
+                                        onChangeText={handleHoursChange}
+                                        selectTextOnFocus
+                                        underlineColorAndroid="transparent"
+                                        maxLength={2}
+                                    />
+                                    <Text style={styles.hoursLabel}>год</Text>
+                                </View>
+                                <Pressable style={styles.stepButton} onPress={() => adjustHours(1)} hitSlop={8}>
+                                    <Ionicons name="add" size={20} color={Colors.white} />
+                                </Pressable>
+                            </View>
+                        </View>
+                    ) : (
+                        <View style={styles.optionsList}>
+                            {ABSENCE_OPTIONS.map((option) => {
+                                const selected = absenceStatus === option.status
+                                return (
+                                    <Pressable
+                                        key={option.status}
+                                        style={[styles.optionRow, selected && styles.optionRowSelected]}
+                                        onPress={() => setAbsenceStatus(option.status)}
+                                    >
+                                        <Ionicons
+                                            name={option.icon}
+                                            size={18}
+                                            color={selected ? Colors.accent : Colors.iconInactive}
+                                        />
+                                        <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>
+                                            {option.label}
+                                        </Text>
+                                    </Pressable>
+                                )
+                            })}
+                        </View>
+                    )}
+                </View>
 
                 <Pressable style={styles.saveButton} onPress={handleSave}>
                     <Text style={styles.saveButtonText}>Зберегти</Text>
@@ -188,6 +192,17 @@ const styles = StyleSheet.create({
     },
     modeButtonTextActive: {
         color: Colors.accent,
+    },
+    contentArea: {
+        minHeight: 155,
+        justifyContent: 'center',
+    },
+    hoursFrame: {
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderRadius: 18,
+        backgroundColor: 'rgba(255,255,255,0.04)',
+        paddingVertical: 18,
     },
     hoursRow: {
         flexDirection: 'row',
