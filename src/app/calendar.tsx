@@ -1,9 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ScreenBackground } from '@/components/ScreenBackground'
-import { CalendarContainer } from '@/components/CalendarContainer'
-import { WorkersCard } from '@/components/WorkersCard'
-import { TAB_BAR_CLEARANCE } from '@/components/FloatingTabBar'
 
 const WORKERS = [
   { name: 'Антонюк Євгеній', role: 'Муляр', active: true },
@@ -19,13 +15,10 @@ const WORKERS = [
 ]
 
 const CalendarScreen = () => {
-  const insets = useSafeAreaInsets()
-
   return (
     <ScreenBackground>
-      <View style={[styles.container, { paddingBottom: insets.bottom + TAB_BAR_CLEARANCE + 16 }]}>
-        <CalendarContainer />
-        <WorkersCard workers={WORKERS} />
+      <View style={styles.container}>
+
       </View>
     </ScreenBackground>
   )
@@ -34,7 +27,7 @@ const CalendarScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 16,
+    backgroundColor:'green'
   },
 })
 
