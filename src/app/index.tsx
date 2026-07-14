@@ -8,7 +8,10 @@ export default function Welcome() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>CrewClock</Text>
-      <Pressable style={styles.button} onPress={() => router.replace('/calendar')}>
+      <Pressable
+        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        onPress={() => router.replace('/calendar')}
+      >
         <Text style={styles.buttonText}>Почати</Text>
       </Pressable>
     </View>
@@ -31,6 +34,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 8,
     backgroundColor: Colors.black,
+  },
+  buttonPressed: {
+    opacity: 0.7,
   },
   buttonText: {
     color: Colors.white,

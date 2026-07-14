@@ -51,7 +51,7 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
               <Pressable
                 key={route.key}
                 onPress={onPress}
-                style={[styles.item, focused && styles.itemActive]}
+                style={({ pressed }) => [styles.item, focused && styles.itemActive, pressed && styles.itemPressed]}
               >
                 <Ionicons
                   name={iconName}
@@ -94,5 +94,8 @@ const styles = StyleSheet.create({
   },
   itemActive: {
     backgroundColor: Colors.tabBarActiveBackground,
+  },
+  itemPressed: {
+    opacity: 0.7,
   },
 })

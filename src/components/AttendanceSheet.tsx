@@ -82,7 +82,7 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
 
                 <View style={styles.modeSwitch}>
                     <Pressable
-                        style={[styles.modeButton, mode === 'worked' && styles.modeButtonActive]}
+                        style={({ pressed }) => [styles.modeButton, mode === 'worked' && styles.modeButtonActive, pressed && styles.pressedOpacity]}
                         onPress={() => setMode('worked')}
                     >
                         <Text style={[styles.modeButtonText, mode === 'worked' && styles.modeButtonTextActive]}>
@@ -90,7 +90,7 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
                         </Text>
                     </Pressable>
                     <Pressable
-                        style={[styles.modeButton, mode === 'absence' && styles.modeButtonActive]}
+                        style={({ pressed }) => [styles.modeButton, mode === 'absence' && styles.modeButtonActive, pressed && styles.pressedOpacity]}
                         onPress={() => setMode('absence')}
                     >
                         <Text style={[styles.modeButtonText, mode === 'absence' && styles.modeButtonTextActive]}>
@@ -103,7 +103,11 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
                     {mode === 'worked' ? (
                         <View style={styles.hoursFrame}>
                             <View style={styles.hoursRow}>
-                                <Pressable style={styles.stepButton} onPress={() => adjustHours(-1)} hitSlop={8}>
+                                <Pressable
+                                    style={({ pressed }) => [styles.stepButton, pressed && styles.pressedOpacity]}
+                                    onPress={() => adjustHours(-1)}
+                                    hitSlop={8}
+                                >
                                     <Ionicons name="remove" size={20} color={Colors.white} />
                                 </Pressable>
                                 <View style={styles.hoursValue}>
@@ -118,7 +122,11 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
                                     />
                                     <Text style={styles.hoursLabel}>год</Text>
                                 </View>
-                                <Pressable style={styles.stepButton} onPress={() => adjustHours(1)} hitSlop={8}>
+                                <Pressable
+                                    style={({ pressed }) => [styles.stepButton, pressed && styles.pressedOpacity]}
+                                    onPress={() => adjustHours(1)}
+                                    hitSlop={8}
+                                >
                                     <Ionicons name="add" size={20} color={Colors.white} />
                                 </Pressable>
                             </View>
@@ -130,7 +138,7 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
                                 return (
                                     <Pressable
                                         key={option.status}
-                                        style={[styles.optionRow, selected && styles.optionRowSelected]}
+                                        style={({ pressed }) => [styles.optionRow, selected && styles.optionRowSelected, pressed && styles.pressedOpacity]}
                                         onPress={() => setAbsenceStatus(option.status)}
                                     >
                                         <Ionicons
@@ -148,7 +156,10 @@ export function AttendanceSheet({ visible, workerName, initialValue, onClose, on
                     )}
                 </View>
 
-                <Pressable style={styles.saveButton} onPress={handleSave}>
+                <Pressable
+                    style={({ pressed }) => [styles.saveButton, pressed && styles.pressedOpacity]}
+                    onPress={handleSave}
+                >
                     <Text style={styles.saveButtonText}>Зберегти</Text>
                 </Pressable>
             </BottomSheetView>
@@ -270,5 +281,8 @@ const styles = StyleSheet.create({
         color: Colors.background,
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    pressedOpacity: {
+        opacity: 0.7,
     },
 })

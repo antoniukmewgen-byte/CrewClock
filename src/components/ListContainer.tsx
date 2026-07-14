@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     containerPressed: {
-        opacity: 0.8,
+        opacity: 0.7,
     },
     avatar: {
         width: 44,

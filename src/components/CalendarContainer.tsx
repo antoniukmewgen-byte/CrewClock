@@ -14,7 +14,7 @@ import { Colors } from '@/theme/colors'
 import { BlurView } from 'expo-blur'
 import { addDays, addWeeks, format, isSameDay, isToday, startOfWeek } from 'date-fns'
 import { uk } from 'date-fns/locale'
-import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 
 const WEEKDAY_LABELS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд']
 const WEEK_RANGE = 104
@@ -24,19 +24,13 @@ function capitalize(value: string) {
 }
 
 function IconButton({ name, onPress }: { name: keyof typeof Ionicons.glyphMap; onPress: () => void }) {
-    const scale = useSharedValue(1)
-    const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }))
-
     return (
         <Pressable
             onPress={onPress}
-            onPressIn={() => { scale.value = withTiming(0.88, { duration: 100 }) }}
-            onPressOut={() => { scale.value = withTiming(1, { duration: 150 }) }}
             hitSlop={8}
+            style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
         >
-            <Animated.View style={[styles.iconButton, animatedStyle]}>
-                <Ionicons name={name} size={20} color={Colors.iconInactive} />
-            </Animated.View>
+            <Ionicons name={name} size={20} color={Colors.iconInactive} />
         </Pressable>
     )
 }
@@ -178,6 +172,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.tabBarActiveBackground,
+    },
+    iconButtonPressed: {
+        opacity: 0.7,
     },
     monthText: {
         color: Colors.white,
